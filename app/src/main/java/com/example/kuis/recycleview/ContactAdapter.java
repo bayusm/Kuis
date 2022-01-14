@@ -1,8 +1,11 @@
 package com.example.kuis.recycleview;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -32,10 +35,17 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Contact contact = listContact.get(position);
 
-        String nameTxt = ": " + contact.name;
-        holder.tvName.setText(nameTxt);
-        String phoneNumberTxt = ": " + contact.phoneNumber;
-        holder.tvPhoneNumber.setText(phoneNumberTxt);
+        String nameStr = ":" + contact.name;
+        holder.tvName.setText(nameStr);
+        String phoneNumberStr = ":" + contact.phoneNumber;
+        holder.tvPhoneNumber.setText(phoneNumberStr);
+
+        String dial = "tel" + phoneNumberStr;
+        holder.btnCall.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_DIAL);
+            intent.setData(Uri.parse(dial));
+            v.getContext().startActivity(intent);
+        });
     }
 
     @Override
@@ -46,12 +56,14 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ViewHold
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView tvName, tvPhoneNumber;
+        Button btnCall;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
             tvName = itemView.findViewById(R.id.tv_name);
             tvPhoneNumber = itemView.findViewById(R.id.tv_phone_number);
+            btnCall = itemView.findViewById(R.id.btn_call);
         }
     }
 }
